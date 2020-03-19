@@ -54,6 +54,19 @@ def find_possible_directions(x):
         list_of_directions.append('up')
     return list_of_directions
 
+def make_random_move():
+    list = find_valid_moves()
+    if len(list) == 0:                                                        # return 0 if there is no valid move
+        return 0
+    nextmove = (list[random.randint(0, len(list) - 1)])
+    orientation = nextmove[1]
+    move(nextmove[0], orientation[random.randint(0, len(orientation) - 1)])
+    return 1                                                                  # return 1 after the board array was changed by a move
+
+print(board, "\n")
+while make_random_move():
+    print(board, "\n")
+'''
 gamestate = True
 while gamestate:
     print(board, "\n")
@@ -64,3 +77,4 @@ while gamestate:
     orientation = nextmove[1]
     move(nextmove[0],orientation[random.randint(0,len(orientation)-1)])
 print(board, "\n")
+'''
