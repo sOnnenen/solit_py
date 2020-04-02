@@ -4,6 +4,7 @@ import numpy as np
 import solit_options
 import matplotlib.pyplot as plt
 import time
+import backtrack
 
 start_time = time.time()  # fix starting time to calculate elapsed time
 x_max, y_max = 350, 350  # horizontal, vertical
@@ -41,7 +42,9 @@ def transform_colors(board_array):
 
 
 pins_left = []
-
+#  find solution with backtracking
+backtrack.solve_solitaer()
+solit_random.board = solit_random.start_board.copy()
 while not done: 
     for event in pygame.event.get(): 
         if event.type == pygame.QUIT:
@@ -57,14 +60,14 @@ while not done:
             pygame.draw.circle(screen, WHITE, coordinates[i], 11)
 
     pygame.display.flip()  # update screen
-    # pygame.time.wait(100) # delay in ms in case you want to watch the game being played live
-    clock.tick(4000)  # fps # increase to decrease runtime(simple solvers), caps eventually
+    pygame.time.wait(200) # delay in ms in case you want to watch the game being played live
+    clock.tick(600)  # fps # increase to decrease runtime(simple solvers), caps eventually
 
-    if solit_random.make_random_move() == 0:  # solver (make_move()) performs a move and returns 1, else returns 0
+    if backtrack.play_move_to_victory() == 0:  # solver (make_move()) performs a move and returns 1, else returns 0
         pins_left.append((solit_random.board == 2).sum())  # calculate remaining pins
         solit_random.board = np.array(solit_random.start_board)
 
-    if len(pins_left) == 1000:   # set the number of games to be played
+    if len(pins_left) == 1:   # set the number of games to be played
         break
 pygame.quit()  # quits the game
 
