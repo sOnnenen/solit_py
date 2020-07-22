@@ -6,6 +6,32 @@ import matplotlib.pyplot as plt
 import time
 import backtrack
 
+#settings
+fps = 600
+wait_time = 200
+number_of_games = 1
+current_function = "backtrack"
+functions = {
+    "backtrack": backtrack.play_move_to_victory,
+    "lookahead1": solit_options.make_move,
+    "lookahead2": solit_options.make_move_2,
+    "random": solit_random.make_random_move
+}
+
+print("The current settings are ")
+print("fps =  ", fps)
+print("wait time = ", wait_time)
+print("number of games  = ", number_of_games)
+print("current function = ", current_function)
+
+update = input("Change Settings? (y/n)")
+if update == "y":
+    fps = int(input("Enter fps: "))
+    wait_time = int(input("Enter wait time: "))
+    number_of_games = int(input("Enter number of games: "))
+    current_function = input("Enter current_function: (backtrack, lookahead1, lookahead2, random)")
+# end settings
+
 start_time = time.time()  # fix starting time to calculate elapsed time
 x_max, y_max = 350, 350  # horizontal, vertical
 WHITE, BLACK, GREY = (255, 255, 255), (0, 0, 0), (122, 122, 122)
@@ -60,14 +86,14 @@ while not done:
             pygame.draw.circle(screen, WHITE, coordinates[i], 11)
 
     pygame.display.flip()  # update screen
-    pygame.time.wait(200) # delay in ms in case you want to watch the game being played live
-    clock.tick(600)  # fps # increase to decrease runtime(simple solvers), caps eventually
+    pygame.time.wait(wait_time) # delay in ms in case you want to watch the game being played live
+    clock.tick(fps)  # fps # increase to decrease runtime(simple solvers), caps eventually
 
-    if backtrack.play_move_to_victory() == 0:  # solver (make_move()) performs a move and returns 1, else returns 0
+    if functions[current_function]() == 0:  # solver (make_move()) performs a move and returns 1, else returns 0
         pins_left.append((solit_random.board == 2).sum())  # calculate remaining pins
         solit_random.board = np.array(solit_random.start_board)
 
-    if len(pins_left) == 1:   # set the number of games to be played
+    if len(pins_left) == number_of_games:   # set the number of games to be played
         break
 pygame.quit()  # quits the game
 
