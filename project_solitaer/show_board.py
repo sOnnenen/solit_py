@@ -5,8 +5,9 @@ import solit_options
 import matplotlib.pyplot as plt
 import time
 import backtrack
+import policy_playing
 
-#settings
+# settings
 fps = 600
 wait_time = 200
 number_of_games = 1
@@ -15,7 +16,9 @@ functions = {
     "backtrack": backtrack.play_move_to_victory,
     "lookahead1": solit_options.make_move,
     "lookahead2": solit_options.make_move_2,
-    "random": solit_random.make_random_move
+    "random": solit_random.make_random_move,
+    "policy": policy_playing.policy_move,
+    "policy2": policy_playing.policy_move_2
 }
 
 print("The current settings are ")
@@ -29,7 +32,7 @@ if update == "y":
     fps = int(input("Enter fps: "))
     wait_time = int(input("Enter wait time: "))
     number_of_games = int(input("Enter number of games: "))
-    current_function = input("Enter current_function: (backtrack, lookahead1, lookahead2, random)")
+    current_function = input("Enter current_function: (backtrack, lookahead1, lookahead2, policy, policy2, random)")
 # end settings
 
 start_time = time.time()  # fix starting time to calculate elapsed time
