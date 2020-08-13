@@ -45,10 +45,11 @@ class State:
         return valid_moves[random.randint(0, len(valid_moves) - 1)]
 
     def get_score(self):
-        return (self.board == 2).sum()                  # summiere alle 2er im Board
+        reward = (33 - (self.board == 2).sum())
+        return reward
 
     def is_game_over(self):
-        if not self.get_available_actions():
+        if not self.get_available_actions():            # is list empty?
             return True
         else:
             return False
@@ -78,7 +79,7 @@ def play_random():
     Spiel.print_state()
 
 
-play_random()
+
 
 
 
