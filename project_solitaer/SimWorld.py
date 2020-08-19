@@ -1,5 +1,6 @@
 import numpy as np
 import random
+import copy
 from abc import ABC, abstractmethod
 
 
@@ -51,7 +52,7 @@ class Cell:
             if pair[0].get_value() != pair[1].get_value():
                 for i in range(2):
                     if pair[i].get_value() == 0:
-                        list_of_possible_actions.append([(self.row, self.column), (self.row - pair[i].get_row(), self.column - pair[i].get_column())])
+                        list_of_possible_actions.append(((self.row, self.column), (self.row - pair[i].get_row(), self.column - pair[i].get_column())))
         return list_of_possible_actions
     # setter Methods
 
@@ -77,7 +78,16 @@ class Board(ABC):
     def set_neighbor_pairs(self): pass
 
     def set_board_array(self, new_array):
+        """
+        sets the board array (e.g. back to a start board)
+        """
         self.board_array = new_array
+
+    def get_board_copy(self):
+        """
+        :return: deep copy of array
+        """
+        return copy.deepcopy(self.board_array)
 
     def get_board_array(self):
         return self.board_array
@@ -94,7 +104,7 @@ class Board(ABC):
                         actions_for_this_pin = self.board_array[i][j].get_possible_actions()
                         for k in range(len(actions_for_this_pin)):
                             list_of_actions.append(actions_for_this_pin[k])
-        return list_of_actions
+        return tuple(list_of_actions)
 
     def in_final_state(self):
         if not self.get_actions():
@@ -111,25 +121,32 @@ class Board(ABC):
 
     def take_action(self, action):
         (row, column) = action[0]
-        print(action)
         (move_offset_vertical, move_offset_horizontal) = action[1]
+        self.prev_state = self.get_board_view()             # save the previous state
         self.board_array[row + move_offset_vertical][column + move_offset_horizontal].set_value(0)
         self.board_array[row - move_offset_vertical][column - move_offset_horizontal].set_value(1)
         self.board_array[row][column].set_value(0)
 
-    def print_board(self):
+    def get_board_view(self):
+        """
+        :return: Board Information in 2d array, use this to print the board or feed this as information
+        """
         visual_array = np.zeros((self.n, self.n))
         for i in range(self.n):
             for j in range(self.n):
                 if self.board_array[i][j] != 0:
                     visual_array[i][j] = self.board_array[i][j].get_value()
-        print(visual_array)
+        return visual_array
+
+    def get_previous_state(self):
+        return self.prev_state
 
 
 class Triangular(Board):
     def __init__(self, n):
         self.n = n
         self.board_array = np.empty(shape=(self.n, self.n), dtype=object)
+        self.prev_state = 0
 
     def populate_board(self):
         tmp_list = []
@@ -139,7 +156,6 @@ class Triangular(Board):
             tmp_list.append(new_cell)
         self.set_board_array(np.zeros((self.n, self.n)))
         x = np.tril_indices(self.get_size())
-        print(x)
         test_array[x] = tmp_list
         self.board_array = test_array
         for i in range(self.n):
@@ -165,6 +181,7 @@ class Diamond(Board):
     def __init__(self, n):
         self.n = n
         self.board_array = np.empty(shape=(self.n, self.n), dtype=object)
+        self.prev_state = 0
 
     def populate_board(self):
         tmp_list = []
@@ -193,23 +210,6 @@ class Diamond(Board):
                 if (i > 0) and (j > 0) and (i < self.n-1) and (j < self.n-1):
                     if (self.board_array[i+1][j+1] != 0) and (self.board_array[i-1][j-1] != 0):
                         self.board_array[i][j].add_neighbor_pair([self.board_array[i-1][j+1], self.board_array[i+1][j-1]])
-
-
-Brett1 = Diamond(4)
-Brett1.populate_board()
-Brett1.board_array[2][1].set_value(0)
-Brett1.set_neighbor_pairs()
-Brett1.print_board()
-# print(Brett1.get_sample_action())
-start_board = Brett1.get_board_array().copy()
-
-while not Brett1.in_final_state():
-    chosen_action = Brett1.get_sample_action()
-    print(chosen_action)
-    Brett1.take_action(chosen_action)
-    Brett1.print_board()
-
-
 
 
 
