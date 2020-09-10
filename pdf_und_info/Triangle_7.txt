@@ -1,0 +1,4 @@
+25000 Episodes
+1000 SHOW_EVERY
+(0,0) initially zero
+~ took <25min, but will need more episodes

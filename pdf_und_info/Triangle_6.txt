@@ -1,0 +1,3 @@
+40000 Episodes
+1000 SHOW_EVERY
+(0,0) initially zero

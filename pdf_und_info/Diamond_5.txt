@@ -1,0 +1,5 @@
+100000 Episodes
+1000 SHOW_EVERY
+(2,2) initially zero (center)
+-> 2pins left best way
+
