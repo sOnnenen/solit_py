@@ -35,8 +35,8 @@ class Screen:
                         pygame.draw.circle(self.screen, self.BLACK, (self.offset+50*i, self.offset+j*50), 15)
                     if self.board[j][i] == 0:
                         pygame.draw.circle(self.screen, self.WHITE, (self.offset + 50 * i, self.offset + j * 50), 15)
-
             self.screen.blit(pygame.transform.rotate(self.screen, 45), (-25*self.size-1, -25*self.size-1))
+
         if self.game_board.board_shape == "Triangular":
             for i in range(self.size):
                 for j in range(self.size):
@@ -51,6 +51,17 @@ class Screen:
                         if self.board[j][i] == 0:
                             pygame.draw.circle(self.screen, self.WHITE, (self.offset + 50 * i+shift, self.offset + j * 50), 15)
 
+        if self.game_board.board_shape == "English":
+            for i in range(self.size):
+                for j in range(self.size):
+                    if self.game_board.board_array[j][i] == 0:
+                        pygame.draw.circle(self.screen, self.GREY, (self.offset + 50 * i, self.offset + j * 50), 15)
+                    elif self.game_board.board_array[j][i].get_value() == 1:
+                        pygame.draw.circle(self.screen, self.BLACK, (self.offset+50*i, self.offset+j*50), 15)
+                    elif self.game_board.board_array[j][i].get_value() == 0:
+                        pygame.draw.circle(self.screen, self.WHITE, (self.offset + 50 * i, self.offset + j * 50), 15)
+
+
     def update_screen(self, wait_time, fps):
         """
         updates display, introduces delay and fps
@@ -59,15 +70,16 @@ class Screen:
         pygame.time.wait(wait_time)  # delay in ms in case you want to watch the game being played live
         clock.tick(fps)  # fps # increase to decrease runtime(simple solvers), caps eventually
 
+
 #  Setup the Board
-Brett1 = SimWorld.Triangular(5)
+Brett1 = SimWorld.English()
 Brett1.populate_board()
-Brett1.board_array[0][0].set_value(0)
+# Brett1.board_array[0][0].set_value(0)
 Brett1.set_neighbor_pairs()
 print(Brett1.get_board_view())
 start_board = Brett1.get_board_copy()
 # Setup Q_Agent
-AgentP = Q_Agent.QLearner(1, 0.9, 0.96, 0.997)
+AgentP = Q_Agent.QLearner(1, 0.9, 0.96, Q_Agent.calc_epsilon_decay(0.96, 0.01))
 episode_counter = 0
 list_of_results = []
 episode_rewards = []
@@ -119,9 +131,14 @@ print(Brett1.get_board_view())
 # uncomment if using moving average
 moving_avg = np.convolve(episode_rewards, np.ones((SHOW_EVERY,)) / SHOW_EVERY, mode="valid")
 """
-
-plt.plot(list_of_results)
-plt.show()
+moving_avg = np.convolve(list_of_results, np.ones((Q_Agent.SHOW_EVERY,)) / Q_Agent.SHOW_EVERY, mode="valid")
+# plt.plot(list_of_results, 'bo')
+plt.plot([i for i in range(len(moving_avg))], moving_avg)
+plt.ylabel('Remaining Pins')
+plt.xlabel('Games played')
+# plt.show()
+plt.grid()
+plt.savefig('English_10000.pdf', dpi='300')
 """
 
 plt.plot([i for i in range(len(moving_avg))], moving_avg)
@@ -129,8 +146,10 @@ plt.ylabel(f"reward {SHOW_EVERY}ma")
 plt.xlabel("episode #")
 plt.show()
 """
-with open(f"q_table_1.pickle", "wb") as f:
+with open(f"English_10000.pickle", "wb") as f:
     pickle.dump(AgentP.q, f, protocol=pickle.HIGHEST_PROTOCOL)
 
+
+# set q_table string function in Q_Agent
 
 

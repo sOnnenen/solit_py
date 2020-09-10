@@ -8,13 +8,11 @@ class Cell:
     """
     Cell in peg solitaer game.
     """
-
-    def __init__(self, value, row, column, index):
+    def __init__(self, value, row, column):
         self.value = value  # 0 for no peg, 1 for peg
         self.row = row
         self.column = column
         self.neighbor_pairs = []
-        self.index = index
 
     # getter Methods
     def get_value(self):
@@ -28,6 +26,9 @@ class Cell:
 
     def get_column(self):
         return self.column
+
+    def get_row_column(self):
+        return tuple(self.row, self.column)
 
     def get_neighbor_pairs(self):
         return self.neighbor_pairs
@@ -104,7 +105,7 @@ class Board(ABC):
                         actions_for_this_pin = self.board_array[i][j].get_possible_actions()
                         for k in range(len(actions_for_this_pin)):
                             list_of_actions.append(actions_for_this_pin[k])
-        return tuple(list_of_actions)
+        return (list_of_actions) #@ removed tuple keyword
 
     def in_final_state(self):
         if not self.get_actions():
@@ -147,12 +148,13 @@ class Triangular(Board):
         self.n = n
         self.board_array = np.empty(shape=(self.n, self.n), dtype=object)
         self.prev_state = 0
+        self.board_shape = "Triangular"
 
     def populate_board(self):
         tmp_list = []
         test_array = np.zeros(shape=(self.n, self.n), dtype=object)
         for i in range((self.n * (self.n + 1)) // 2):
-            new_cell = Cell(1, 0, 0, i)
+            new_cell = Cell(1, 0, 0)
             tmp_list.append(new_cell)
         self.set_board_array(np.zeros((self.n, self.n)))
         x = np.tril_indices(self.get_size())
@@ -182,12 +184,13 @@ class Diamond(Board):
         self.n = n
         self.board_array = np.empty(shape=(self.n, self.n), dtype=object)
         self.prev_state = 0
+        self.board_shape = "Diamond"
 
     def populate_board(self):
         tmp_list = []
         test_array = np.zeros(shape=(self.n, self.n), dtype=object)
         for i in range(self.n ** 2):
-            new_cell = Cell(1, 0, 0, i)
+            new_cell = Cell(1, 0, 0)
             tmp_list.append(new_cell)
         self.set_board_array(np.zeros((self.n, self.n)))
         t = tuple([np.array([x // self.n for x in range(self.n*self.n)]), np.array(self.n*[x for x in range(self.n)])]) # helps filling the array similar to triangular case
@@ -212,5 +215,31 @@ class Diamond(Board):
                         self.board_array[i][j].add_neighbor_pair([self.board_array[i-1][j+1], self.board_array[i+1][j-1]])
 
 
+class English(Board):
+    def __init__(self):
+        self.n = 7
+        self.board_array = np.empty(shape=(self.n, self.n), dtype=object)
+        self.prev_state = 0
+        self.board_shape = "English"
 
+    def populate_board(self):
+        test_array = np.zeros(shape=(self.n, self.n), dtype=object)
+        tmp_list = [Cell(1, 0, 2), Cell(1, 0, 3), Cell(1, 0, 4), Cell(1, 1, 2), Cell(1, 1, 3), Cell(1, 1, 4),
+                    Cell(1, 2, 0), Cell(1, 2, 1), Cell(1, 2, 2), Cell(1, 2, 3), Cell(1, 2, 4), Cell(1, 2, 5),
+                    Cell(1, 2, 6), Cell(1, 3, 0), Cell(1, 3, 1), Cell(1, 3, 2), Cell(0, 3, 3), Cell(1, 3, 4),
+                    Cell(1, 3, 5), Cell(1, 3, 6), Cell(1, 4, 0), Cell(1, 4, 1), Cell(1, 4, 2), Cell(1, 4, 3),
+                    Cell(1, 4, 4), Cell(1, 4, 5), Cell(1, 4, 6), Cell(1, 5, 2), Cell(1, 5, 3), Cell(1, 5, 4),
+                    Cell(1, 6, 2), Cell(1, 6, 3), Cell(1, 6, 4)]
+        for ele in range(len(tmp_list)):
+            test_array[tmp_list[ele].get_row()][tmp_list[ele].get_column()] = tmp_list[ele]
+        self.board_array = test_array
 
+    def set_neighbor_pairs(self):
+        for i in range(self.n):
+            for j in range(self.n):
+                if (i > 0) and (i < self.n-1):
+                    if (self.board_array[i+1][j] != 0) and (self.board_array[i-1][j] != 0):
+                        self.board_array[i][j].add_neighbor_pair([self.board_array[i-1][j], self.board_array[i+1][j]])
+                if (j > 0) and (j < self.n-1):
+                    if (self.board_array[i][j+1] != 0) and (self.board_array[i][j-1] != 0):
+                        self.board_array[i][j].add_neighbor_pair([self.board_array[i][j-1], self.board_array[i][j+1]])
