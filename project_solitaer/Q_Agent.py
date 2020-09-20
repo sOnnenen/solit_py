@@ -8,9 +8,9 @@ import pickle
 import os
 from collections import defaultdict
 
-EPISODES = 5000
-SHOW_EVERY = 1000
-reward_dict = {1: 500, 2: 4, 3: 0.06, 4: 0.002, 5: 0.0001, 6: 0.000015}  # rewards for pins left
+EPISODES = 50000
+SHOW_EVERY = 100000  # don't show to not slow down training
+reward_dict = {1: 500, 2: 4, 3: 0.06, 4: 0.002, 5: 0.0001, 6: 0.000015, 7: 0.000002}  # rewards for pins left
 
 
 def calc_epsilon_decay(epsilon, epsilon_end):
@@ -30,8 +30,8 @@ class QLearner:
         """
         use pickle to safe q table. Otherwise just use self.q = {}
         """
-        if os.path.exists("English_10000.pickle"):
-            self.start_q_table = "English_10000.pickle"  # None or Filename
+        if os.path.exists("English_50000.pickle"):
+            self.start_q_table = "English_50000.pickle"  # None or Filename
         else:
             self.start_q_table = None
 

@@ -74,12 +74,16 @@ class Screen:
 #  Setup the Board
 Brett1 = SimWorld.English()
 Brett1.populate_board()
-# Brett1.board_array[0][0].set_value(0)
+# make first move as it does not really matter
+Brett1.board_array[3][3].set_value(1)
+Brett1.board_array[3][4].set_value(0)
+Brett1.board_array[3][5].set_value(0)
+
 Brett1.set_neighbor_pairs()
 print(Brett1.get_board_view())
 start_board = Brett1.get_board_copy()
 # Setup Q_Agent
-AgentP = Q_Agent.QLearner(1, 0.9, 0.96, Q_Agent.calc_epsilon_decay(0.96, 0.01))
+AgentP = Q_Agent.QLearner(1, 0.9, 0.5, Q_Agent.calc_epsilon_decay(0.5, 0.01))
 episode_counter = 0
 list_of_results = []
 episode_rewards = []
@@ -136,9 +140,9 @@ moving_avg = np.convolve(list_of_results, np.ones((100,)) / 100, mode="valid")
 plt.plot([i for i in range(len(moving_avg))], moving_avg)
 plt.ylabel('Remaining Pins')
 plt.xlabel('Games played')
-# plt.show()
 plt.grid()
-plt.savefig('English_10000.pdf', dpi='300')
+# plt.show()
+plt.savefig('English_50000.pdf', dpi=300)
 """
 
 plt.plot([i for i in range(len(moving_avg))], moving_avg)
@@ -146,7 +150,7 @@ plt.ylabel(f"reward {SHOW_EVERY}ma")
 plt.xlabel("episode #")
 plt.show()
 """
-with open(f"English_10000.pickle", "wb") as f:
+with open(f"English_50000.pickle", "wb") as f:
     pickle.dump(AgentP.q, f, protocol=pickle.HIGHEST_PROTOCOL)
 
 
