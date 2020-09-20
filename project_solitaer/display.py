@@ -131,7 +131,7 @@ print(Brett1.get_board_view())
 # uncomment if using moving average
 moving_avg = np.convolve(episode_rewards, np.ones((SHOW_EVERY,)) / SHOW_EVERY, mode="valid")
 """
-moving_avg = np.convolve(list_of_results, np.ones((Q_Agent.SHOW_EVERY,)) / Q_Agent.SHOW_EVERY, mode="valid")
+moving_avg = np.convolve(list_of_results, np.ones((100,)) / 100, mode="valid")
 # plt.plot(list_of_results, 'bo')
 plt.plot([i for i in range(len(moving_avg))], moving_avg)
 plt.ylabel('Remaining Pins')
