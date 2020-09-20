@@ -8,8 +8,8 @@ import pickle
 import os
 from collections import defaultdict
 
-EPISODES = 25000
-SHOW_EVERY = 5000
+EPISODES = 5000
+SHOW_EVERY = 1000
 reward_dict = {1: 500, 2: 4, 3: 0.06, 4: 0.002, 5: 0.0001, 6: 0.000015}  # rewards for pins left
 
 
