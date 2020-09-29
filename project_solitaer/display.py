@@ -7,8 +7,21 @@ import copy
 import pickle
 import time
 
-
+EPISODES = 100000
+SHOW_EVERY = 50000  # don't show to not slow down training
 WHITE, BLACK, GREY = (255, 255, 255), (0, 0, 0), (122, 122, 122)        # Colors for Peg, no Peg, Background
+NAME = "English_100000"
+show_games = 0
+time_between_displayed_moves = 200  # number is in ms
+
+alpha = 1
+gamma = 0.9
+epsilon_start = 0.4
+epsilon_end = 0.0001
+
+
+def calc_epsilon_decay(epsilon, epsilon_end):
+    return (epsilon_end/epsilon)**(1/float(EPISODES))
 
 
 class Screen:
@@ -70,7 +83,6 @@ class Screen:
         pygame.time.wait(wait_time)  # delay in ms in case you want to watch the game being played live
         clock.tick(fps)  # fps # increase to decrease runtime(simple solvers), caps eventually
 
-
 #  Setup the Board
 Brett1 = SimWorld.English()
 Brett1.populate_board()
@@ -78,40 +90,42 @@ Brett1.populate_board()
 Brett1.board_array[3][3].set_value(1)
 Brett1.board_array[3][4].set_value(0)
 Brett1.board_array[3][5].set_value(0)
+# Brett1.board_array[0][0].set_value(0)
 
 Brett1.set_neighbor_pairs()
 print(Brett1.get_board_view())
 start_board = Brett1.get_board_copy()
 # Setup Q_Agent
-AgentP = Q_Agent.QLearner(1, 0.9, 0.5, Q_Agent.calc_epsilon_decay(0.5, 0.01))
+AgentP = Q_Agent.QLearner(alpha, gamma, epsilon_start, calc_epsilon_decay(epsilon_start, epsilon_end), NAME)
 episode_counter = 0
 list_of_results = []
 episode_rewards = []
-total_rewards = np.zeros(Q_Agent.EPISODES)
-display_flag = 0
-# Setup Display
-Display = Screen(Brett1)
+total_rewards = np.zeros(EPISODES)
 start_time = time.time()  # fix starting time to calculate elapsed time
-pygame.init()
-clock = pygame.time.Clock()  # time
-Display.open_screen()
-Display.update_screen(500, 600)
+
+if show_games == 1:
+    Display = Screen(Brett1)
+    pygame.init()
+    clock = pygame.time.Clock()  # time
+    Display.open_screen()
+    Display.update_screen(time_between_displayed_moves, 600)
+display_flag = 0
 # Play Episodes, show the game from time to time
-for element in range(Q_Agent.EPISODES):
+for element in range(EPISODES):
     episode_counter += 1
     while not Brett1.in_final_state():
         if display_flag == 1:
             Display.open_screen()
-            Display.update_screen(500, 600)
+            Display.update_screen(time_between_displayed_moves, 600)
         agent_action = AgentP.get_next_action(Brett1.get_board_view(), Brett1.get_actions())
         Brett1.take_action(agent_action)
         AgentP.train_agent(Brett1.get_board_view(), Brett1.get_actions(), agent_action, Brett1.get_previous_state(), Brett1.in_final_state())
         if display_flag == 1:
             Display.open_screen()
-            Display.update_screen(500, 600)
+            Display.update_screen(time_between_displayed_moves, 600)
     result = np.sum(Brett1.get_board_view())
     list_of_results.append(result)
-    if episode_counter % Q_Agent.SHOW_EVERY == 0:
+    if episode_counter % SHOW_EVERY == 0 and show_games:
         display_flag = 1
         print("Result: ", result)
         print(Brett1.get_board_view())
@@ -131,29 +145,15 @@ while not Brett1.in_final_state():
     Brett1.take_action(agent_action)
 print(Brett1.get_board_view())
 
-"""
-# uncomment if using moving average
-moving_avg = np.convolve(episode_rewards, np.ones((SHOW_EVERY,)) / SHOW_EVERY, mode="valid")
-"""
 moving_avg = np.convolve(list_of_results, np.ones((100,)) / 100, mode="valid")
-# plt.plot(list_of_results, 'bo')
 plt.plot([i for i in range(len(moving_avg))], moving_avg)
 plt.ylabel('Remaining Pins')
 plt.xlabel('Games played')
 plt.grid()
 # plt.show()
-plt.savefig('English_50000.pdf', dpi=300)
-"""
+plt.savefig(NAME+".pdf", dpi=300)
 
-plt.plot([i for i in range(len(moving_avg))], moving_avg)
-plt.ylabel(f"reward {SHOW_EVERY}ma")
-plt.xlabel("episode #")
-plt.show()
-"""
-with open(f"English_50000.pickle", "wb") as f:
+with open(NAME+f".pickle", "wb") as f:
     pickle.dump(AgentP.q, f, protocol=pickle.HIGHEST_PROTOCOL)
 
-
-# set q_table string function in Q_Agent
-
-
+print("--- %s seconds ---" % (time.time() - start_time))
