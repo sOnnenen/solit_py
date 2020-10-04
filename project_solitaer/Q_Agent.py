@@ -72,27 +72,34 @@ class QLearner:
             i = q_values.index(max_q)
         return actions[i]
 
-    def get_reward(self, end_state):
+    def get_reward(self, end_state, game_over):
         """
         calculating the reward for a certain state
         """
         r = np.sum(end_state)
         # Mittelwert der Standartabweichung vom "Masse - Zentrum"
         # np.average(np.std(np.where(end_state == 1), axis=1))
-        if r < 7:
-            return reward_dict[r]
-        else:  # threshold can be added to use update learner function
+        if r == 1:
+            return 10000
+        if game_over and (r > 1):
             return 0
+        else:
+            # keeping pins together might give better results on english board
+            # if r < 7:
+            # if np.average(np.std(np.where(end_state == 1), axis=1)) > 1.5:
+            #     return 0
+            # else:
+            return 1  # reward_dict[r]
+            # else:
 
     def train_agent(self, state, actions, chosen_action, prev_state, game_over):
         """
         Calculate new q value and adjust table
         """
-        reward = 0
-        if game_over:
-            reward = self.get_reward(state)
-        #
+
+        reward = self.get_reward(state, game_over)
         q_before = self.get_q(prev_state, chosen_action)
+
         max_q_new = max([self.get_q(state, a) for a in actions], default=0)  # default case for state with no moves
         self.q[(prev_state.tobytes(), chosen_action)] = q_before + self.alpha * (
                     (reward + self.gamma * max_q_new) - q_before)

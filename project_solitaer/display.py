@@ -7,17 +7,19 @@ import copy
 import pickle
 import time
 
-EPISODES = 100000
+EPISODES = 50000
 SHOW_EVERY = 50000  # don't show to not slow down training
 WHITE, BLACK, GREY = (255, 255, 255), (0, 0, 0), (122, 122, 122)        # Colors for Peg, no Peg, Background
-NAME = "English_100000"
+NAME = "English50k"
 show_games = 0
 time_between_displayed_moves = 200  # number is in ms
+AVERAGE = 100
+
 
 alpha = 1
-gamma = 0.9
-epsilon_start = 0.4
-epsilon_end = 0.0001
+gamma = 0.99
+epsilon_start = 0.99
+epsilon_end = 0.005
 
 
 def calc_epsilon_decay(epsilon, epsilon_end):
@@ -85,6 +87,7 @@ class Screen:
 
 #  Setup the Board
 Brett1 = SimWorld.English()
+# Brett1 = SimWorld.Diamond(6)
 Brett1.populate_board()
 # make first move as it does not really matter
 Brett1.board_array[3][3].set_value(1)
@@ -132,8 +135,8 @@ for element in range(EPISODES):
     else:
         display_flag = 0
     AgentP.update_epsilon()     # apply epsilon decay
-    episode_rewards.append(AgentP.get_reward(Brett1.get_board_view()))
-    total_rewards[element] = AgentP.get_reward(Brett1.get_board_view())
+    episode_rewards.append(AgentP.get_reward(Brett1.get_board_view(), Brett1.in_final_state()))
+    total_rewards[element] = AgentP.get_reward(Brett1.get_board_view(), Brett1.in_final_state())
     if Brett1.in_final_state():
         Brett1.set_board_array(copy.deepcopy(start_board))
 
@@ -144,8 +147,9 @@ while not Brett1.in_final_state():
     agent_action = AgentP.get_next_action(Brett1.get_board_view(), Brett1.get_actions())
     Brett1.take_action(agent_action)
 print(Brett1.get_board_view())
+print("Max given reward was", max(episode_rewards))
 
-moving_avg = np.convolve(list_of_results, np.ones((100,)) / 100, mode="valid")
+moving_avg = np.convolve(list_of_results, np.ones((AVERAGE,)) / AVERAGE, mode="valid")
 plt.plot([i for i in range(len(moving_avg))], moving_avg)
 plt.ylabel('Remaining Pins')
 plt.xlabel('Games played')
