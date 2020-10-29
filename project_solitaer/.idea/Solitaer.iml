@@ -3,8 +3,9 @@
   <component name="NewModuleRootManager">
     <content url="file://$USER_HOME$/Shared_Projects/solit_py/project_solitaer">
       <sourceFolder url="file://$USER_HOME$/Shared_Projects/solit_py/project_solitaer" isTestSource="false" />
+      <excludeFolder url="file://$USER_HOME$/Shared_Projects/solit_py/project_solitaer/venv" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="Python 3.8 (env)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

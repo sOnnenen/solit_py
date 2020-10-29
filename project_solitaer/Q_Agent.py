@@ -4,12 +4,11 @@ import pickle
 import os
 from collections import defaultdict
 
-# rewards for pins left
-reward_dict = {1: 10000, 2: 1000, 3: 100, 4: 10, 5: 1, 6: 0.1}
-
 
 def o():
-    return random.random()/10000
+    """Returns initial value for Q_value in the Q_table"""
+    # return random.random()/10000
+    return 0
 
 
 class QLearner:
@@ -33,12 +32,12 @@ class QLearner:
             with open(self.start_q_table, "rb") as f:
                 self.q = pickle.load(f)
 
-    def update_learner(self):
+    def update_learner(self, alpha, gamma, epsilon, epsilon_decay):
         """
         it might be good to change the parameters once the winning reward is received
         """
         self.alpha = 1
-        self.gamma = 0.9  # subject of change
+        self.gamma = 0.99  # subject of change
         self.epsilon = 0.05  # subject of change
 
     def update_epsilon(self):
@@ -89,8 +88,7 @@ class QLearner:
             # if np.average(np.std(np.where(end_state == 1), axis=1)) > 1.5:
             #     return 0
             # else:
-            return 1  # reward_dict[r]
-            # else:
+            return 1
 
     def train_agent(self, state, actions, chosen_action, prev_state, game_over):
         """

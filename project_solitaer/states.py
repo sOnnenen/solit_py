@@ -26,6 +26,9 @@ def positions_n_jumps(depth, board):
 
 
 def compare_boards(board1, board2):
+    """
+        returns true if boards if symmetrie is found
+    """
     board1t = board1.transpose()
     if (board1 == board2).all():
         return True

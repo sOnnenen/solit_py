@@ -10,7 +10,7 @@ import time
 EPISODES = 50000
 SHOW_EVERY = 50000  # don't show to not slow down training
 WHITE, BLACK, GREY = (255, 255, 255), (0, 0, 0), (122, 122, 122)        # Colors for Peg, no Peg, Background
-NAME = "English50k"
+NAME = "Diamond5 %d Episodes" % EPISODES  # shows up as title of plot and name of pdf and pickle file
 show_games = 0
 time_between_displayed_moves = 200  # number is in ms
 AVERAGE = 100
@@ -18,8 +18,8 @@ AVERAGE = 100
 
 alpha = 1
 gamma = 0.99
-epsilon_start = 0.99
-epsilon_end = 0.005
+epsilon_start = 0.99  # 0.99
+epsilon_end = 0.003  # 0.005
 
 
 def calc_epsilon_decay(epsilon, epsilon_end):
@@ -86,14 +86,14 @@ class Screen:
         clock.tick(fps)  # fps # increase to decrease runtime(simple solvers), caps eventually
 
 #  Setup the Board
-Brett1 = SimWorld.English()
-# Brett1 = SimWorld.Diamond(6)
+# Brett1 = SimWorld.Triangular(8)
+Brett1 = SimWorld.Diamond(5)
 Brett1.populate_board()
 # make first move as it does not really matter
-Brett1.board_array[3][3].set_value(1)
-Brett1.board_array[3][4].set_value(0)
-Brett1.board_array[3][5].set_value(0)
-# Brett1.board_array[0][0].set_value(0)
+# Brett1.board_array[3][3].set_value(1)
+# Brett1.board_array[3][4].set_value(0)
+# Brett1.board_array[3][5].set_value(0)
+Brett1.board_array[0][0].set_value(0)
 
 Brett1.set_neighbor_pairs()
 print(Brett1.get_board_view())
@@ -116,6 +116,7 @@ display_flag = 0
 # Play Episodes, show the game from time to time
 for element in range(EPISODES):
     episode_counter += 1
+    immediate_reward = []
     while not Brett1.in_final_state():
         if display_flag == 1:
             Display.open_screen()
@@ -123,6 +124,7 @@ for element in range(EPISODES):
         agent_action = AgentP.get_next_action(Brett1.get_board_view(), Brett1.get_actions())
         Brett1.take_action(agent_action)
         AgentP.train_agent(Brett1.get_board_view(), Brett1.get_actions(), agent_action, Brett1.get_previous_state(), Brett1.in_final_state())
+        immediate_reward.append(AgentP.get_reward(Brett1.get_board_view(), Brett1.in_final_state()))
         if display_flag == 1:
             Display.open_screen()
             Display.update_screen(time_between_displayed_moves, 600)
@@ -136,7 +138,7 @@ for element in range(EPISODES):
         display_flag = 0
     AgentP.update_epsilon()     # apply epsilon decay
     episode_rewards.append(AgentP.get_reward(Brett1.get_board_view(), Brett1.in_final_state()))
-    total_rewards[element] = AgentP.get_reward(Brett1.get_board_view(), Brett1.in_final_state())
+    total_rewards[element] = sum(immediate_reward)
     if Brett1.in_final_state():
         Brett1.set_board_array(copy.deepcopy(start_board))
 
@@ -150,12 +152,25 @@ print(Brett1.get_board_view())
 print("Max given reward was", max(episode_rewards))
 
 moving_avg = np.convolve(list_of_results, np.ones((AVERAGE,)) / AVERAGE, mode="valid")
+plt.figure(0)
 plt.plot([i for i in range(len(moving_avg))], moving_avg)
+plt.title(NAME)
 plt.ylabel('Remaining Pins')
 plt.xlabel('Games played')
 plt.grid()
 # plt.show()
 plt.savefig(NAME+".pdf", dpi=300)
+
+
+moving_avg_2 = np.convolve(total_rewards, np.ones((AVERAGE,)) / AVERAGE, mode="valid")
+plt.figure(1)
+plt.plot([i for i in range(len(moving_avg_2))], moving_avg_2)
+plt.title(NAME)
+plt.ylabel('Total Reward over Episode')
+plt.xlabel('Games played')
+plt.grid()
+plt.savefig(NAME+" Reward.pdf", dpi=300)
+
 
 with open(NAME+f".pickle", "wb") as f:
     pickle.dump(AgentP.q, f, protocol=pickle.HIGHEST_PROTOCOL)
