@@ -4,6 +4,57 @@ import pickle
 import os
 from collections import defaultdict
 
+ACTIVE_FUNCTION = 'normalized_reward'
+
+
+def normalized_reward(dead_end, end_state):
+    pins_left = np.sum(end_state)
+    if pins_left == 1:
+        return 10000
+    if dead_end is True:
+        return 0
+    else:
+        return 1
+
+
+def strict_reward(dead_end, end_state):
+    pins_left = np.sum(end_state)
+    if pins_left == 1:
+        return 10000
+    elif dead_end is True:
+        return -2.5
+    else:
+        return 1
+
+
+def tactical_reward(dead_end, end_state):
+    pins_left = np.sum(end_state)
+    if pins_left == 1:
+        return 10000
+    if dead_end is True:
+        return -11
+    if (25 > pins_left) and (10 < pins_left):
+        if np.average(np.std(np.where(end_state == 1), axis=1)) > 1.5:
+            return -1
+        else:
+            return 0
+    else:
+        return 0
+
+
+reward_function_dict = {
+    'normalized_reward': normalized_reward,
+    'strict_reward': strict_reward,
+    'tactical_reward': tactical_reward
+}
+
+
+def get_reward(end_state, game_over):
+    """
+    calculating the reward for a certain state
+    """
+    return reward_function_dict[ACTIVE_FUNCTION](game_over, end_state)
+
 
 def o():
     """Returns initial value for Q_value in the Q_table"""
@@ -12,11 +63,12 @@ def o():
 
 
 class QLearner:
-    def __init__(self, alpha, gamma, epsilon, epsilon_decay, name):
+    def __init__(self, alpha, gamma, epsilon, epsilon_decay, alpha_decay, name):
         self.alpha = alpha  # learning rate should be 1 since we have a deterministic environment
         self.gamma = gamma  # discount factor
         self.epsilon = epsilon  # exploration rate
         self.epsilon_decay = epsilon_decay  # exploration rate decay
+        self.alpha_decay = alpha_decay
         self.name = name
         """
         use pickle to safe q table. Otherwise just use self.q = {}
@@ -46,6 +98,12 @@ class QLearner:
         """
         self.epsilon *= self.epsilon_decay
 
+    def update_alpha(self):
+        """
+        applying decay to epsilon (epsilon = chance to make a random move instead of max q move)
+        """
+        self.alpha *= self.alpha_decay
+
     def get_q(self, state, action):
         """
         return Q value for state - action pair. 0 initially by default dict
@@ -71,33 +129,25 @@ class QLearner:
             i = q_values.index(max_q)
         return actions[i]
 
-    def get_reward(self, end_state, game_over):
-        """
-        calculating the reward for a certain state
-        """
-        r = np.sum(end_state)
-        # Mittelwert der Standartabweichung vom "Masse - Zentrum"
-        # np.average(np.std(np.where(end_state == 1), axis=1))
-        if r == 1:
-            return 10000
-        if game_over and (r > 1):
-            return 0
-        else:
-            # keeping pins together might give better results on english board
-            # if r < 7:
-            # if np.average(np.std(np.where(end_state == 1), axis=1)) > 1.5:
-            #     return 0
-            # else:
-            return 1
-
     def train_agent(self, state, actions, chosen_action, prev_state, game_over):
         """
         Calculate new q value and adjust table
         """
-
-        reward = self.get_reward(state, game_over)
+        reward = get_reward(state, game_over)
+        # reward = self.get_reward(state, game_over)
         q_before = self.get_q(prev_state, chosen_action)
 
         max_q_new = max([self.get_q(state, a) for a in actions], default=0)  # default case for state with no moves
         self.q[(prev_state.tobytes(), chosen_action)] = q_before + self.alpha * (
                     (reward + self.gamma * max_q_new) - q_before)
+
+
+
+
+
+# funcdict = {
+#   'tactical_reaward': tactical_reward,
+#     ....
+# }
+# set funciton: active_function = 'tactical_reward'
+# call function: funcdict[active_function](parameter1, parameter2)
