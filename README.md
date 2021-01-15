@@ -1,4 +1,8 @@
 # solit_py
-Solitär Projekt in Python, for playing the game, view the computer playing it, view a ML system playing it.
 
-Test, test
+# Bestärkendes Lernen am Beispiel von (Peg)Solitär 
+
+Diese README Datei soll eine Übersicht über den im Rahmen des Projekts geschriebenen Code geben, 
+damit dieser einfach verwendet, geändert und/oder darauf aufgebaut werden kann.
+
+Zunächst empfiehlt es sich mit Solitär vertraut zu machen. 
