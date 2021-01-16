@@ -1,3 +1,7 @@
+"""
+Dieser Backtracking Algorithmus findet eine Lösung für das Englische Solitär Brett
+"""
+
 import solit_random
 import time
 moves_to_victory = []
@@ -38,9 +42,9 @@ def solve_solitaer():
             moves_to_victory.pop()  # pops last element
             solit_random.board = previous_board.copy()
 
-# start_time = time.time()
-# print(solit_random.board)
-# solve_solitaer()
-# print(moves_to_victory)
-# print(solit_random.board)
-# print("--- %s seconds ---" % (time.time() - start_time))
+start_time = time.time()
+print(solit_random.board)
+solve_solitaer()
+print(moves_to_victory)
+print(solit_random.board)
+print("--- %s seconds ---" % (time.time() - start_time))
