@@ -6,13 +6,14 @@ from collections import defaultdict
 
 ACTIVE_FUNCTION = 'normalized_reward'
 
+goal_reached = False
 
 def normalized_reward(dead_end, end_state):
     pins_left = np.sum(end_state)
     if pins_left == 1:
         return 10000
     if dead_end is True:
-        return 0
+        return -2
     else:
         return 1
 
@@ -20,11 +21,15 @@ def normalized_reward(dead_end, end_state):
 def strict_reward(dead_end, end_state):
     pins_left = np.sum(end_state)
     if pins_left == 1:
-        return 10000
+        global goal_reached
+        goal_reached = True
+        return 10
     elif dead_end is True:
-        return -2.5
+        return -0.9
     else:
         return 1
+# test only negativ reward (when game is over)
+# test adjusting learning rate when goal is reached ()
 
 
 def tactical_reward(dead_end, end_state):
@@ -58,14 +63,13 @@ def get_reward(end_state, game_over):
 
 def o():
     """Returns initial value for Q_value in the Q_table"""
-    # return random.random()/10000
     return 0
 
 
 class QLearner:
     def __init__(self, alpha, gamma, epsilon, epsilon_decay, alpha_decay, name):
-        self.alpha = alpha  # learning rate should be 1 since we have a deterministic environment
-        self.gamma = gamma  # discount factor
+        self.alpha = alpha      # learning rate should be 1 since we have a deterministic environment
+        self.gamma = gamma      # discount factor
         self.epsilon = epsilon  # exploration rate
         self.epsilon_decay = epsilon_decay  # exploration rate decay
         self.alpha_decay = alpha_decay
@@ -84,13 +88,13 @@ class QLearner:
             with open(self.start_q_table, "rb") as f:
                 self.q = pickle.load(f)
 
-    def update_learner(self, alpha, gamma, epsilon, epsilon_decay):
+    def update_learner(self):
         """
         it might be good to change the parameters once the winning reward is received
         """
-        self.alpha = 1
-        self.gamma = 0.99  # subject of change
-        self.epsilon = 0.05  # subject of change
+        # self.alpha = (1-self.alpha)/100 + self.alpha
+        # self.alpha = self.alpha - self.alpha / 50
+        # self.epsilon = self.epsilon - self.epsilon/50
 
     def update_epsilon(self):
         """
@@ -134,20 +138,8 @@ class QLearner:
         Calculate new q value and adjust table
         """
         reward = get_reward(state, game_over)
-        # reward = self.get_reward(state, game_over)
         q_before = self.get_q(prev_state, chosen_action)
-
         max_q_new = max([self.get_q(state, a) for a in actions], default=0)  # default case for state with no moves
         self.q[(prev_state.tobytes(), chosen_action)] = q_before + self.alpha * (
-                    (reward + self.gamma * max_q_new) - q_before)
+                (reward + self.gamma * max_q_new) - q_before)
 
-
-
-
-
-# funcdict = {
-#   'tactical_reaward': tactical_reward,
-#     ....
-# }
-# set funciton: active_function = 'tactical_reward'
-# call function: funcdict[active_function](parameter1, parameter2)
