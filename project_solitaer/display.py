@@ -7,13 +7,14 @@ import copy
 import pickle
 import time
 
-EPISODES = 10000
-SHOW_EVERY = 10000  # don't show to not slow down training
+EPISODES = 1000
+SHOW_EVERY = 999  # don't show to not slow down training
 WHITE, BLACK, GREY = (255, 255, 255), (0, 0, 0), (122, 122, 122)        # Colors for Peg, no Peg, Background
-NAME = "Diamond6 %d Episodes" % EPISODES  # shows up as title of plot and name of pdf and pickle file
-show_games = 0
-time_between_displayed_moves = 200  # number is in ms
-AVERAGE = 100
+# NAME = "Triangular 6 %d Episodes" % EPISODES  # shows up as title of plot and name of pdf and pickle file
+NAME = "Pinguin_test"
+show_games = 1
+time_between_displayed_moves = 50  # number is in ms
+AVERAGE = 20
 
 
 alpha = 1
@@ -90,14 +91,14 @@ class Screen:
         clock.tick(fps)  # fps # increase to decrease runtime(simple solvers), caps eventually
 
 #  Setup the Board
-# Brett1 = SimWorld.Triangular(8)
-Brett1 = SimWorld.Diamond(6)
+Brett1 = SimWorld.Penguin()
+# Brett1 = SimWorld.Diamond(6)
 Brett1.populate_board()
 # make first move as it does not really matter
 # Brett1.board_array[3][3].set_value(1)
 # Brett1.board_array[3][4].set_value(0)
 # Brett1.board_array[3][5].set_value(0)
-Brett1.board_array[0][0].set_value(0)
+Brett1.board_array[2][1].set_value(0)
 
 Brett1.set_neighbor_pairs()
 print(Brett1.get_board_view())
