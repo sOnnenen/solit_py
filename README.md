@@ -84,3 +84,26 @@ Die Reward Function, die festlegt wie die Züge belohnt werden, kann in der File
 ***display.py:***
 
 Diese File lernt einen Agent für ein Spielbrett. Die File erstellt dann zwei Plots. Der erste Plot zeigt die Anzahl der verbleibenden Pins über die Episoden und der zweite Plot den erhaltenen Reward über die Episoden. Die Anzahl der Episoden kann über *EPISODES* geändert werden. *SHOW_EVERY* gibt an nach welcher Anzahl an Episoden die grafische Darstellung erfolgen soll. Dazu muss *show_games* noch auf Eins gesetzt werden. Über *AVERAGE* kann angegeben werden über wie viele Episoden immer gemittelt wird.
+
+# Ein neues Solitär Brett Klasse implementieren (Beispiel Pinguin Brett)
+
+#### Zunächst wird die Klasse mit init Funktion erstellt: 
+Das Pinguin Brett ist wird mit analog zum englischen Brett und zum Dreieck Brett erstellt. Die Größe ist auf 5 festgelegt und als shape wird "Triangular" verwendet.
+#### Danach muss noch das Spielbrett bevölkert werden:
+Dazu verwendet man die modifizierte Version der populate_board() Funktion des Englischen Bretts.
+Jede Zelle bekommt dabei Koordinaten entsprechen des transformierten Pinguin Bretts. Siehe nachstehende Grafik.
+
+![Pinguin](/images/Pinguin.png)
+
+#### Anschließend muss noch die set_neighbor_pairs Funktion des Dreieck Bretts übernommen werden und fertig ist die Pinguin Klasse: 
+
+Um diese zu testen muss man lediglich, in der display.py Funktion das Pinguin Brett verwenden.
+```bash
+NAME = "Pinguin_test"
+# weiterer Code
+Brett = SimWorld.py.Penguin()
+Brett.populate_board()
+Brett.board_array[2][1].set_value(0)
+```
+
+
