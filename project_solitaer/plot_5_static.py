@@ -25,7 +25,7 @@ alpha = 1
 gamma = 1
 epsilon_start = [0.01, 0.00875, 0.0075, 0.00625, 0.005]  # 0.99 # bei keinem decay irrelevant
 epsilon_end = 0.0005  # 0.005
-alpha_end = 0.0005
+alpha_end = 0.001
 
 """
 Spielbrett aufsetzten
