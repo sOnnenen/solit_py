@@ -106,4 +106,28 @@ Brett.populate_board()
 Brett.board_array[2][1].set_value(0)
 ```
 
+# Nachvollziehen der Plots aus dem Projektbericht
+
+###### Plot über Spiele mit zufälligen Zügen:
+
+***play_random.py***
+
+###### Plot über 5 Agenten zu konstantem Epsilon und abnehmender Lernrate:
+
+***plot_5_static.py***
+
+###### Plots über 6 Agenten zur Reduzierung der Explorationsrate bei konstanter Lernrate:
+
+***plot_6.py***
+
+###### Finden einer Lösung mit Backtracking(noch auf erster Solitär Version):
+
+***backtrack.py***
+
+###### Backtracking für Enlisch, Dreieck, Raute im Vergleich
+
+***backtracking.py***
+
+
+
 
