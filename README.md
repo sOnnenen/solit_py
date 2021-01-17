@@ -83,7 +83,7 @@ Die Reward Function, die festlegt wie die Züge belohnt werden, kann in der File
 
 ***display.py:***
 
-Diese File lernt einen Agent für ein Spielbrett. Die File erstellt dann zwei Plots. Der erste Plot zeigt die Anzahl der verbleibenden Pins über die Episoden und der zweite Plot den erhaltenen Reward über die Episoden. Die Anzahl der Episoden kann über *EPISODES* geändert werden. *SHOW_EVERY* gibt an nach welcher Anzahl an Episoden die grafische Darstellung erfolgen soll. Dazu muss *show_games* noch auf Eins gesetzt werden. Über *AVERAGE* kann angegeben werden über wie viele Episoden immer gemittelt wird.
+Diese File lernt einen Agent für ein Spielbrett. Die File erstellt dann zwei Plots. Der erste Plot zeigt die Anzahl der verbleibenden Pins über die Episoden und der zweite Plot den erhaltenen Reward über die Episoden. Die Anzahl der Episoden kann über *EPISODES* geändert werden. *SHOW_EVERY* gibt an nach welcher Anzahl an Episoden die grafische Darstellung erfolgen soll. Dazu muss *show_games* noch auf Eins gesetzt werden. Über *AVERAGE* kann angegeben werden über wie viele Episoden immer gemittelt wird. Außerdem wird die Q-Table in einer Pickle Datei gespeichert.
 
 # Ein neues Solitär Brett Klasse implementieren (Beispiel Pinguin Brett)
 
