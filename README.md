@@ -93,7 +93,7 @@ Das Pinguin Brett ist wird mit analog zum englischen Brett und zum Dreieck Brett
 Dazu verwendet man die modifizierte Version der populate_board() Funktion des Englischen Bretts.
 Jede Zelle bekommt dabei Koordinaten entsprechen des transformierten Pinguin Bretts. Siehe nachstehende Grafik.
 
-![Pinguin](/images/Pinguin.png)
+![Pinguin](https://raw.githubusercontent.com/schneidero1/solit_py/master/images/Pinguin.PNG)
 
 #### Anschließend muss noch die set_neighbor_pairs Funktion des Dreieck Bretts übernommen werden und fertig ist die Pinguin Klasse: 
 
