@@ -70,10 +70,9 @@ Agent=Q_Agent.QLearner(0.5,0.5,0.01,0.01,'Table')
 ```
 So würde ein Spielzug mit Aktualisierung der Q-Table aussehen:
 ```bash
-State=Brett.get_board_view()
-Zug_Liste=Brett.get_actions()
-Aktion=Agent.get_next_action(State,Zug_Liste)
-Agent.train_agent(State,Zug_Liste,Aktion,Brett.get_previous_state(),Brett.in_final_state())
+Aktion=Agent.get_next_action(Brett.get_board_view(),Brett.get_actions())
+Brett.take_action(Aktion)
+Agent.train_agent(Brett.get_board_view(),Brett.get_actions(),Aktion,Brett.get_previous_state(),Brett.in_final_state())
 Agent.update_epsilon()
 Agent.update_alpha()
 ```
