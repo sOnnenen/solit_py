@@ -88,7 +88,7 @@ Diese File lernt einen Agent für ein Spielbrett. Die File erstellt dann zwei Pl
 # Ein neues Solitär Brett Klasse implementieren (Beispiel Pinguin Brett)
 
 #### Zunächst wird die Klasse mit init Funktion erstellt: 
-Das Pinguin Brett ist wird mit analog zum englischen Brett und zum Dreieck Brett erstellt. Die Größe ist auf 5 festgelegt und als shape wird "Triangular" verwendet.
+Das Pinguin Brett wird analog zum englischen Brett und zum Dreieck Brett erstellt. Die Größe ist auf 5 festgelegt und als shape wird "Triangular" verwendet.
 #### Danach muss noch das Spielbrett bevölkert werden:
 Dazu verwendet man die modifizierte Version der populate_board() Funktion des Englischen Bretts.
 Jede Zelle bekommt dabei Koordinaten entsprechen des transformierten Pinguin Bretts. Siehe nachstehende Grafik.
@@ -124,7 +124,7 @@ Brett.board_array[2][1].set_value(0)
 
 ***backtrack.py***
 
-###### Backtracking für Enlisch, Dreieck, Raute im Vergleich
+###### Backtracking für Englisch, Dreieck, Raute im Vergleich
 
 ***backtracking.py***
 
