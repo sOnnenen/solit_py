@@ -54,7 +54,7 @@ Brett.take_action(Zug_Liste[3])
 
 ***Q_Agent.py:***
 
-Diese File beinhaltet die Klasse *QLearner(alpha,gamma,epsilon,epsilon_decay,alpha_decay,name)*. Sie stellt den Agenten auf Basis des Q-Learning Algorithmuses dar. *alpha* ist die Learning Rate, *gamma* der Discount und *epsilon* die Exploration Rate. *epsiolon_decy* und *alpha_decay* geben an wie schnell *epsilon* bzw. *alpha* absinken und sind optional. Soll *epsilon* oder *alpha* nicht kleiner werden, dann muss der jeweilige Decay Null sein. *name* gibt den Namen der Q-Table File an. Nachfolgend werden die wichtigste Methoden für den Agenten aufgelistet.
+Diese File beinhaltet die Klasse *QLearner(alpha,gamma,epsilon,epsilon_decay,alpha_decay,name)*. Sie stellt den Agenten auf Basis des Q-Learning Algorithmus dar. *alpha* ist die Learning Rate, *gamma* der Discount und *epsilon* die Exploration Rate. *epsiolon_decy* und *alpha_decay* geben an wie schnell *epsilon* bzw. *alpha* absinken und sind optional. Soll *epsilon* oder *alpha* nicht kleiner werden, dann muss der jeweilige Decay Null sein. *name* gibt den Namen der Q-Table File an. Nachfolgend werden die wichtigste Methoden für den Agenten aufgelistet.
 
 -*update_epsilon()*: Aktualisiert den Wert von *epsilon*, falls *epsilon_decay* ungleich Null.
 
@@ -83,15 +83,15 @@ Die Reward Function, die festlegt wie die Züge belohnt werden, kann in der File
 
 ***display.py:***
 
-Diese File lernt einen Agent für ein Spielbrett. Die File erstellt dann zwei Plots. Der erste Plot zeigt die Anzahl der verbleibenden Pins über die Episoden und der zweite Plot den erhaltenen Reward über die Episoden. Die Anzahl der Episoden kann über *EPISODES* geändert werden. *SHOW_EVERY* gibt an nach welcher Anzahl an Episoden die grafische Darstellung erfolgen soll. Dazu muss *show_games* noch auf Eins gesetzt werden. Über *AVERAGE* kann angegeben werden über wie viele Episoden immer gemittelt wird. Außerdem wird die Q-Table in einer Pickle Datei gespeichert.
+Dieses File lernt einen Agent für ein Spielbrett. Das File erstellt dann zwei Plots. Der erste Plot zeigt die Anzahl der verbleibenden Pins über die Episoden und der zweite Plot den erhaltenen Reward über die Episoden. Die Anzahl der Episoden kann über *EPISODES* geändert werden. *SHOW_EVERY* gibt an nach welcher Anzahl an Episoden die grafische Darstellung erfolgen soll. Dazu muss *show_games* noch auf Eins gesetzt werden. Über *AVERAGE* kann angegeben werden über wie viele Episoden immer gemittelt wird. Außerdem wird die Q-Table in einer Pickle Datei gespeichert.
 
-# Ein neues Solitär Brett Klasse implementieren (Beispiel Pinguin Brett)
+# Ein neues Solitär Brett implementieren (Beispiel Pinguin Brett)
 
-#### Zunächst wird die Klasse mit init Funktion erstellt: 
+#### Zunächst wird die Klasse mit der init Funktion erstellt: 
 Das Pinguin Brett wird analog zum englischen Brett und zum Dreieck Brett erstellt. Die Größe ist auf 5 festgelegt und als shape wird "Triangular" verwendet.
 #### Danach muss noch das Spielbrett bevölkert werden:
 Dazu verwendet man die modifizierte Version der populate_board() Funktion des Englischen Bretts.
-Jede Zelle bekommt dabei Koordinaten entsprechen des transformierten Pinguin Bretts. Siehe nachstehende Grafik.
+Jede Zelle bekommt dabei Koordinaten entsprechend des transformierten Pinguin Bretts. Siehe nachstehende Grafik.
 
 ![Pinguin](https://raw.githubusercontent.com/schneidero1/solit_py/master/images/Pinguin.PNG)
 
@@ -105,7 +105,7 @@ Brett = SimWorld.py.Penguin()
 Brett.populate_board()
 Brett.board_array[2][1].set_value(0)
 ```
-
+\newpage
 # Nachvollziehen der Plots aus dem Projektbericht
 
 ###### Plot über Spiele mit zufälligen Zügen:
