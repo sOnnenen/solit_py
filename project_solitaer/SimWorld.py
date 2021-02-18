@@ -279,3 +279,52 @@ class Penguin(Board):
                             [self.board_array[i - 1][j - 1], self.board_array[i + 1][j + 1]])
 
 
+class Square(Board):
+    def __init__(self, n):
+        self.n = n
+        self.board_array = np.empty(shape=(self.n, self.n), dtype=object)
+        self.prev_state = 0
+        self.board_shape = "Square"
+
+    def populate_board(self):
+        for i in range(self.n):
+            for j in range(self.n):
+                self.board_array[i][j] = Cell(1, i, j)
+
+    def set_neighbor_pairs(self):
+        for i in range(self.n):
+            for j in range(self.n):
+                if (i > 0) and (i < self.n-1):
+                    if (self.board_array[i+1][j] != 0) and (self.board_array[i-1][j] != 0):
+                        self.board_array[i][j].add_neighbor_pair([self.board_array[i-1][j], self.board_array[i+1][j]])
+                if (j > 0) and (j < self.n-1):
+                    if (self.board_array[i][j+1] != 0) and (self.board_array[i][j-1] != 0):
+                        self.board_array[i][j].add_neighbor_pair([self.board_array[i][j-1], self.board_array[i][j+1]])
+
+
+class Rectangular24(Board):
+    def __init__(self):
+        self.n = 7
+        self.board_array = np.empty(shape=(self.n, self.n), dtype=object)
+        self.prev_state = 0
+        self.board_shape = "English"
+
+    def populate_board(self):
+        test_array = np.zeros(shape=(self.n, self.n), dtype=object)
+        tmp_list = [Cell(1, 0, 2), Cell(1, 0, 3), Cell(1, 0, 4), Cell(1, 1, 0), Cell(1, 1, 1), Cell(1, 1, 2),
+                    Cell(1, 1, 3), Cell(1, 1, 4), Cell(1, 1, 5), Cell(1, 1, 6), Cell(1, 2, 0), Cell(1, 2, 1),
+                    Cell(1, 2, 2), Cell(1, 2, 3), Cell(1, 2, 4), Cell(1, 2, 5), Cell(1, 2, 6), Cell(1, 3, 0),
+                    Cell(1, 3, 1), Cell(1, 3, 2), Cell(1, 3, 3), Cell(1, 3, 4), Cell(1, 3, 5), Cell(1, 3, 6)]
+        for ele in range(len(tmp_list)):
+            test_array[tmp_list[ele].get_row()][tmp_list[ele].get_column()] = tmp_list[ele]
+        self.board_array = test_array
+
+    def set_neighbor_pairs(self):
+        for i in range(self.n):
+            for j in range(self.n):
+                if (i > 0) and (i < self.n-1):
+                    if (self.board_array[i+1][j] != 0) and (self.board_array[i-1][j] != 0):
+                        self.board_array[i][j].add_neighbor_pair([self.board_array[i-1][j], self.board_array[i+1][j]])
+                if (j > 0) and (j < self.n-1):
+                    if (self.board_array[i][j+1] != 0) and (self.board_array[i][j-1] != 0):
+                        self.board_array[i][j].add_neighbor_pair([self.board_array[i][j-1], self.board_array[i][j+1]])
