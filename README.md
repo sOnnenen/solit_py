@@ -105,7 +105,8 @@ Brett = SimWorld.py.Penguin()
 Brett.populate_board()
 Brett.board_array[2][1].set_value(0)
 ```
-\newpage
+<div style="page-break-after: always"></div>
+
 # Nachvollziehen der Plots aus dem Projektbericht
 
 ###### Plot über Spiele mit zufälligen Zügen:
@@ -124,7 +125,7 @@ Brett.board_array[2][1].set_value(0)
 
 ***backtrack.py***
 
-###### Backtracking für Englisch, Dreieck, Raute im Vergleich
+###### Backtracking für Englisch, Dreieck, Raute im Vergleich:
 
 ***backtracking.py***
 
